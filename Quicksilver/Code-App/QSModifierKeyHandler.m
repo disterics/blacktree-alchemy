@@ -2,8 +2,19 @@
 //  QSModifierKeyHandler.m
 //  Quicksilver
 //
-//  Created by disterics on 07/12/2009.
+// Copyright 2009 disterics
 //
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 #import "QSModifierKeyHandler.h"
 #import "QSKeyMap.h"
@@ -15,11 +26,11 @@
 - (NSUInteger)qsModifierFlags;
 
 @end
- 
+
 static const EventTypeSpec kModifierEventTypeSpec[] 
-  = { { kEventClassKeyboard, kEventRawKeyModifiersChanged } };
+= { { kEventClassKeyboard, kEventRawKeyModifiersChanged } };
 static const size_t kModifierEventTypeSpecSize 
-  = sizeof(kModifierEventTypeSpec) / sizeof(EventTypeSpec);
+= sizeof(kModifierEventTypeSpec) / sizeof(EventTypeSpec);
 
 
 @implementation QSModifierKeyHandler
@@ -29,7 +40,7 @@ GTMOBJECT_SINGLETON_BOILERPLATE(QSModifierKeyHandler, sharedModifierKeyHandler);
 
 - (id)init {
     if (self = [super init]) {
-	if (DEBUG_STARTUP) NSLog(@"KeyHandler Init");
+		if (DEBUG_STARTUP) NSLog(@"KeyHandler Init");
     }
     return self;
 }
@@ -40,9 +51,9 @@ GTMOBJECT_SINGLETON_BOILERPLATE(QSModifierKeyHandler, sharedModifierKeyHandler);
     GTMCarbonEventMonitorHandler *handler 
 	= [GTMCarbonEventMonitorHandler sharedEventMonitorHandler];
     [handler unregisterForEvents:kModifierEventTypeSpec 
-	     count:kModifierEventTypeSpecSize];
+						   count:kModifierEventTypeSpecSize];
     [handler setDelegate:nil];
-   [super dealloc];
+	[super dealloc];
 }
 
 
@@ -51,23 +62,23 @@ GTMOBJECT_SINGLETON_BOILERPLATE(QSModifierKeyHandler, sharedModifierKeyHandler);
                      handler:(EventHandlerCallRef)handler {
     OSStatus status = eventNotHandledErr;
     if ([event eventClass] == kEventClassKeyboard &&
-	[event eventKind] == kEventRawKeyModifiersChanged) {
-	UInt32 modifiers;
-	if ([event getUInt32ParameterNamed:kEventParamKeyModifiers
-		   data:&modifiers]) {
-	    NSUInteger cocoaMods = GTMCarbonToCocoaKeyModifiers(modifiers);
-	    NSEvent *nsEvent = [NSEvent keyEventWithType:NSFlagsChanged
-					location:[NSEvent mouseLocation]
-					modifierFlags:cocoaMods
-					timestamp:[event time]
-					windowNumber:0
-					context:nil
-                                        characters:nil
-					charactersIgnoringModifiers:nil
-					isARepeat:NO
-					keyCode:0];
-	    [self modifiersChangedWhileInactive:nsEvent];
-	}
+		[event eventKind] == kEventRawKeyModifiersChanged) {
+		UInt32 modifiers;
+		if ([event getUInt32ParameterNamed:kEventParamKeyModifiers
+									  data:&modifiers]) {
+			NSUInteger cocoaMods = GTMCarbonToCocoaKeyModifiers(modifiers);
+			NSEvent *nsEvent = [NSEvent keyEventWithType:NSFlagsChanged
+												location:[NSEvent mouseLocation]
+										   modifierFlags:cocoaMods
+											   timestamp:[event time]
+											windowNumber:0
+												 context:nil
+											  characters:nil
+							 charactersIgnoringModifiers:nil
+											   isARepeat:NO
+												 keyCode:0];
+			[self modifiersChangedWhileInactive:nsEvent];
+		}
     }
     return status;
 }
@@ -80,91 +91,91 @@ GTMOBJECT_SINGLETON_BOILERPLATE(QSModifierKeyHandler, sharedModifierKeyHandler);
     // and if we are in the process of activating, we want to ignore the hotkey
     // so we don't try to process it twice.
     if (!hotModifiers_ || [NSApp keyWindow]) 
-	return;
-
+		return;
+	
     NSUInteger flags = [event qsModifierFlags];
     // is the modifier we are looking for
     if (flags != hotModifiers_) return;
     const useconds_t oneMilliSecond = 10000;
     UInt16 modifierKeys[] = {
-	0,
-	kVK_Shift,
-	kVK_CapsLock,
-	kVK_RightShift,
+		0,
+		kVK_Shift,
+		kVK_CapsLock,
+		kVK_RightShift,
     };
-  
+	
     if (hotModifiers_ == NSControlKeyMask) {
-	modifierKeys[0] = kVK_Control;
+		modifierKeys[0] = kVK_Control;
     } else if (hotModifiers_ == NSAlternateKeyMask) {
-	modifierKeys[0]  = kVK_Option;
+		modifierKeys[0]  = kVK_Option;
     } else if (hotModifiers_ == NSCommandKeyMask) {
-	modifierKeys[0]  = kVK_Command;
+		modifierKeys[0]  = kVK_Command;
     }
-
+	
     QSKeyMap *hotMap = [[[QSKeyMap alloc] initWithKeys:modifierKeys
-					  count:1] autorelease];
+												 count:1] autorelease];
     QSKeyMap *invertedHotMap
 	= [[[QSKeyMap alloc] initWithKeys:modifierKeys
-			     count:sizeof(modifierKeys) / sizeof(UInt16)]
-	      autorelease];
+								count:sizeof(modifierKeys) / sizeof(UInt16)]
+	   autorelease];
     invertedHotMap = [invertedHotMap keyMapByInverting];
     NSTimeInterval startDate = [NSDate timeIntervalSinceReferenceDate];
     BOOL isGood = NO;
     // check if our modifier was released
     while(([NSDate timeIntervalSinceReferenceDate] - startDate) < [self doubleClickTime]) {
-	QSKeyMap *currentKeyMap = [QSKeyMap currentKeyMap];
-	if ([currentKeyMap containsAnyKeyIn:invertedHotMap]
-	    || GetCurrentButtonState()) {
-	    return;
-	}
-
-	if (![currentKeyMap containsAnyKeyIn:hotMap]) {
-	    // Key released;
-	    isGood = YES;
-	    break;
-	}
-	usleep(oneMilliSecond);
+		QSKeyMap *currentKeyMap = [QSKeyMap currentKeyMap];
+		if ([currentKeyMap containsAnyKeyIn:invertedHotMap]
+			|| GetCurrentButtonState()) {
+			return;
+		}
+		
+		if (![currentKeyMap containsAnyKeyIn:hotMap]) {
+			// Key released;
+			isGood = YES;
+			break;
+		}
+		usleep(oneMilliSecond);
     }
-
+	
     if (!isGood) return;
     startDate = [NSDate timeIntervalSinceReferenceDate];
     isGood = NO;
     // check if our modifier key is pressed again 
     while(([NSDate timeIntervalSinceReferenceDate] - startDate) < [self doubleClickTime]) {
-	QSKeyMap *currentKeyMap = [QSKeyMap currentKeyMap];
-	if ([currentKeyMap containsAnyKeyIn:invertedHotMap]
-	    || GetCurrentButtonState()) {
-	    return;
-	}
-	if ([currentKeyMap containsAnyKeyIn:hotMap]) {
-	    // Key down
-	    isGood = YES;
-	    break;
-	}
-	usleep(oneMilliSecond);
+		QSKeyMap *currentKeyMap = [QSKeyMap currentKeyMap];
+		if ([currentKeyMap containsAnyKeyIn:invertedHotMap]
+			|| GetCurrentButtonState()) {
+			return;
+		}
+		if ([currentKeyMap containsAnyKeyIn:hotMap]) {
+			// Key down
+			isGood = YES;
+			break;
+		}
+		usleep(oneMilliSecond);
     }
     if (!isGood) return;
-  
+	
     startDate = [NSDate timeIntervalSinceReferenceDate];
-
+	
     // and now look for the release of the second tap 
     while(([NSDate timeIntervalSinceReferenceDate] - startDate)
-	  < [self doubleClickTime]) {
-	QSKeyMap *currentKeyMap = [QSKeyMap currentKeyMap];
-	if ([currentKeyMap containsAnyKeyIn:invertedHotMap]) {
-	    return;
-	}
-	if (![currentKeyMap containsAnyKeyIn:hotMap]) {
-	    // Key Released
-	    isGood = YES;
-	    break;
-	}
-	usleep(oneMilliSecond);
+		  < [self doubleClickTime]) {
+		QSKeyMap *currentKeyMap = [QSKeyMap currentKeyMap];
+		if ([currentKeyMap containsAnyKeyIn:invertedHotMap]) {
+			return;
+		}
+		if (![currentKeyMap containsAnyKeyIn:hotMap]) {
+			// Key Released
+			isGood = YES;
+			break;
+		}
+		usleep(oneMilliSecond);
     }
-
+	
     if (isGood) {
-	// Houston - we have liftoff
-	[self sendAction];
+		// Houston - we have liftoff
+		[self sendAction];
     }
 }
 
@@ -172,39 +183,39 @@ GTMOBJECT_SINGLETON_BOILERPLATE(QSModifierKeyHandler, sharedModifierKeyHandler);
     // A statemachine that tracks our state via hotModifiersState_.
     // Simple incrementing state.
     if (!hotModifiers_) {
-	return;
+		return;
     }
     NSTimeInterval timeWindowToRespond
 	= lastHotModifiersEventCheckedTime_ + [self doubleClickTime];
     lastHotModifiersEventCheckedTime_ = [event timestamp];
     if (hotModifiersState_
-	&& lastHotModifiersEventCheckedTime_ > timeWindowToRespond) {
-	// Timed out. Reset.
-	hotModifiersState_ = 0;
-	return;
+		&& lastHotModifiersEventCheckedTime_ > timeWindowToRespond) {
+		// Timed out. Reset.
+		hotModifiersState_ = 0;
+		return;
     }
-
+	
     NSUInteger flags = [event qsModifierFlags];
     BOOL isGood = NO;
     if (!(hotModifiersState_ % 2)) {
-	// This is key down cases
-	isGood = (flags == hotModifiers_);
+		// This is key down cases
+		isGood = (flags == hotModifiers_);
     } 
     else {
-	// This is key up cases
-	isGood = (flags == 0);
+		// This is key up cases
+		isGood = (flags == 0);
     }
     if (!isGood) {
-	// reset
-	hotModifiersState_ = 0;
-	return;
+		// reset
+		hotModifiersState_ = 0;
+		return;
     } 
     else {
-	hotModifiersState_ += 1;
+		hotModifiersState_ += 1;
     }
     if (hotModifiersState_ == 3) {
-	// We've worked our way through the state machine to success!
-	[self sendAction];
+		// We've worked our way through the state machine to success!
+		[self sendAction];
     }
 }
 
@@ -220,29 +231,30 @@ GTMOBJECT_SINGLETON_BOILERPLATE(QSModifierKeyHandler, sharedModifierKeyHandler);
     
     hotModifiers_ = (1 << value);
     if (VERBOSE) {
-
-	switch (hotModifiers_) {
-	case NSCommandKeyMask:
-	    NSLog(@"Using command key : ");
-	    break;
-	case NSAlternateKeyMask:
-	    NSLog(@"Using option key");
-	    break;
-	case NSControlKeyMask:
-	    NSLog(@"Using control key");
-	    break;
-	case NSShiftKeyMask:
-	    NSLog(@"Using shift key");
-	    break;
-	case NSFunctionKeyMask:
-	    NSLog(@"Using function key");
-	    break;
-	case NSAlphaShiftKeyMask:
-	    NSLog(@"Using caps lock");
-	    break;
-	default:
-	    NSLog(@"unknown mod");
-	}
+		
+		switch (hotModifiers_) {
+			case NSCommandKeyMask:
+				NSLog(@"Using command key : ");
+				break;
+			case NSAlternateKeyMask:
+				NSLog(@"Using option key");
+				break;
+			case NSControlKeyMask:
+				NSLog(@"Using control key");
+				break;
+			case NSShiftKeyMask:
+				NSLog(@"Using shift key");
+				break;
+			case NSFunctionKeyMask:
+				NSLog(@"Using function key");
+				break;
+			case NSAlphaShiftKeyMask:
+				NSLog(@"Using caps lock");
+				break;
+			default:
+				NSLog(@"unknown mod");
+				break;
+		}
     }
 }
 
@@ -256,8 +268,8 @@ GTMOBJECT_SINGLETON_BOILERPLATE(QSModifierKeyHandler, sharedModifierKeyHandler);
 - (id)target { return target; }
 - (void)setTarget:(id)newTarget {
     if (target != newTarget) {
-	[target release];
-	target = [newTarget retain];
+		[target release];
+		target = [newTarget retain];
     }
 }
 
@@ -269,8 +281,8 @@ GTMOBJECT_SINGLETON_BOILERPLATE(QSModifierKeyHandler, sharedModifierKeyHandler);
 - (NSString *)identifier { return identifier; }
 - (void)setIdentifier:(NSString *)newIdentifier {
     if (identifier != newIdentifier) {
-	[identifier release];
-	identifier = [newIdentifier retain];
+		[identifier release];
+		identifier = [newIdentifier retain];
     }
 }
 
@@ -280,22 +292,22 @@ GTMOBJECT_SINGLETON_BOILERPLATE(QSModifierKeyHandler, sharedModifierKeyHandler);
 
 // Returns the amount of time between two clicks to be considered a double click
 - (NSTimeInterval)doubleClickTime {
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  NSTimeInterval doubleClickThreshold
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSTimeInterval doubleClickThreshold
     = [defaults doubleForKey:@"com.apple.mouse.doubleClickThreshold"];
-
-  // if we couldn't find the value in the user defaults, take a
-  // conservative estimate
-  if (doubleClickThreshold <= 0.0) {
-    doubleClickThreshold = 1.0;
-  }
-  return doubleClickThreshold;
+	
+	// if we couldn't find the value in the user defaults, take a
+	// conservative estimate
+	if (doubleClickThreshold <= 0.0) {
+		doubleClickThreshold = 1.0;
+	}
+	return doubleClickThreshold;
 }
 
 - (void)enable {
     GTMCarbonEventMonitorHandler *handler = [GTMCarbonEventMonitorHandler sharedEventMonitorHandler];
     [handler registerForEvents:kModifierEventTypeSpec 
-	     count:kModifierEventTypeSpecSize];
+						 count:kModifierEventTypeSpecSize];
     [handler setDelegate:self];
 }
 
@@ -303,7 +315,7 @@ GTMOBJECT_SINGLETON_BOILERPLATE(QSModifierKeyHandler, sharedModifierKeyHandler);
     GTMCarbonEventMonitorHandler *handler 
 	= [GTMCarbonEventMonitorHandler sharedEventMonitorHandler];
     [handler unregisterForEvents:kModifierEventTypeSpec 
-	     count:kModifierEventTypeSpecSize];
+						   count:kModifierEventTypeSpecSize];
     [handler setDelegate:nil];
 }
 
@@ -311,14 +323,9 @@ GTMOBJECT_SINGLETON_BOILERPLATE(QSModifierKeyHandler, sharedModifierKeyHandler);
 @end
 
 @implementation NSEvent (QuickSilverEventAdditions)
-/**
- * Remove caps lock and numeric loc
- */
 - (NSUInteger)qsModifierFlags {
     NSUInteger flags
 	= ([self modifierFlags] & NSDeviceIndependentModifierFlagsMask);
-    // if (flags & NSAlphaShiftKeyMask) flags -= NSAlphaShiftKeyMask;
-    if (flags & NSNumericPadKeyMask) flags -= NSNumericPadKeyMask;
     return flags;
 }
 

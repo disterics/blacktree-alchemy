@@ -298,8 +298,6 @@
 		92D9C96B0D134BDD00D91825 /* QSTreeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D9C9690D134BDD00D91825 /* QSTreeController.m */; };
 		92DC402C0E25A0C40091BD92 /* Action_p.png in Resources */ = {isa = PBXBuildFile; fileRef = 92DC402A0E25A0C30091BD92 /* Action_p.png */; };
 		92DC402D0E25A0C40091BD92 /* Action.png in Resources */ = {isa = PBXBuildFile; fileRef = 92DC402B0E25A0C40091BD92 /* Action.png */; };
-		92E946190D04CCEF0013377F /* QSModifierKeyEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 92E946170D04CCEF0013377F /* QSModifierKeyEvents.h */; };
-		92E9461A0D04CCEF0013377F /* QSModifierKeyEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E946180D04CCEF0013377F /* QSModifierKeyEvents.m */; };
 		CDCC201010A4C14B009C4EED /* QSMDPredicate.h in Headers */ = {isa = PBXBuildFile; fileRef = CDCC200E10A4C14B009C4EED /* QSMDPredicate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CDCC201110A4C14B009C4EED /* QSMDPredicate.m in Sources */ = {isa = PBXBuildFile; fileRef = CDCC200F10A4C14B009C4EED /* QSMDPredicate.m */; };
 		E102347106BB6CC900143367 /* Find.icns in Resources */ = {isa = PBXBuildFile; fileRef = E102347006BB6CC900143367 /* Find.icns */; };
@@ -1181,8 +1179,6 @@
 		92D9C9690D134BDD00D91825 /* QSTreeController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = QSTreeController.m; sourceTree = "<group>"; };
 		92DC402A0E25A0C30091BD92 /* Action_p.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Action_p.png; sourceTree = "<group>"; };
 		92DC402B0E25A0C40091BD92 /* Action.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Action.png; sourceTree = "<group>"; };
-		92E946170D04CCEF0013377F /* QSModifierKeyEvents.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = QSModifierKeyEvents.h; sourceTree = "<group>"; };
-		92E946180D04CCEF0013377F /* QSModifierKeyEvents.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = QSModifierKeyEvents.m; sourceTree = "<group>"; };
 		CDCC200E10A4C14B009C4EED /* QSMDPredicate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QSMDPredicate.h; sourceTree = "<group>"; };
 		CDCC200F10A4C14B009C4EED /* QSMDPredicate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QSMDPredicate.m; sourceTree = "<group>"; };
 		E102347006BB6CC900143367 /* Find.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Find.icns; sourceTree = "<group>"; };
@@ -2108,8 +2104,6 @@
 				7F4E4B370A3CD83D0070336A /* QSMainMenuPrefPane.m */,
 				7F60F12607FA134600922645 /* QSMainPreferencePanes.h */,
 				7F60F12707FA134600922645 /* QSMainPreferencePanes.m */,
-				92E946170D04CCEF0013377F /* QSModifierKeyEvents.h */,
-				92E946180D04CCEF0013377F /* QSModifierKeyEvents.m */,
 				E18001EC07B2BBB900010DB0 /* QSOutlineView.h */,
 				E18001ED07B2BBB900010DB0 /* QSOutlineView.m */,
 				E18001F007B2BBB900010DB0 /* QSPlugInsPrefPane.h */,
@@ -2589,7 +2583,6 @@
 				7FE2EE8B09FF0BD50046DBBF /* QSTitleToolbarItem.h in Headers */,
 				7FDBC5010A02D93400E496FF /* QSAdvancedPrefPane.h in Headers */,
 				7F4E4B380A3CD83D0070336A /* QSMainMenuPrefPane.h in Headers */,
-				92E946190D04CCEF0013377F /* QSModifierKeyEvents.h in Headers */,
 				27BCE58B10D0EC72007CEB4F /* QSModifierKeyHandler.h in Headers */,
 				2727154B10D2EACD00DF221A /* QSKeyMap.h in Headers */,
 			);
@@ -3314,7 +3307,6 @@
 				7FE2EE8C09FF0BD50046DBBF /* QSTitleToolbarItem.m in Sources */,
 				7FDBC5020A02D93400E496FF /* QSAdvancedPrefPane.m in Sources */,
 				7F4E4B390A3CD83D0070336A /* QSMainMenuPrefPane.m in Sources */,
-				92E9461A0D04CCEF0013377F /* QSModifierKeyEvents.m in Sources */,
 				27BCE58C10D0EC72007CEB4F /* QSModifierKeyHandler.m in Sources */,
 				2727154C10D2EACD00DF221A /* QSKeyMap.m in Sources */,
 			);
